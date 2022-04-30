@@ -1,0 +1,30 @@
+{
+    "name": "fmihel/php-config",
+    "description": "php config loader",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "fmihel",
+            "email": "fmihel76@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "8.5.23",
+        "fmihel/console-log": "*"
+    },    
+    "autoload": {
+        "psr-4": {
+            "fmihel\\config\\": "source"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "fmihel\\config\\test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit --bootstrap vendor/autoload.php tests",
+        "testdox": "phpunit --testdox tests"
+
+    }}
