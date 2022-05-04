@@ -9,7 +9,8 @@ namespace fmihel\config;
 class ConfigCore{
 
     public $param=[];
-    
+    private $_test = false;
+
     private $settings=[
         'fileName'=>'config.php',
         'configVarName'=>'config',
@@ -31,26 +32,29 @@ class ConfigCore{
         );
 
         if (file_exists($this->settings['fileName']))
-            $this->loadFromFile($this->settings['fileName'],true);
-
+            $this->loadFromFile($this->settings['fileName']);
+        if (file_exists($this->settings['template']))
+            $this->test();
     }
     /** 
      * загрузка конфига из файла ( объединяется с текущей конфигурацией) 
      * 
     */
-    public function loadFromFile(string $file,bool $testTemplate=false){
+    public function loadFromFile(string $file){
         $configVarName = $this->settings['configVarName'];
         require_once $file;
         $this->param = array_merge_recursive($this->param,${$configVarName});
-        if ($testTemplate)
-            $this->testTemplate();
-        
     }
     /** сравнение шаблона и загруженного конфига */
-    private function testTemplate(){
-        if (file_exists($this->settings['template'])){
+    public function test(string $templateFileName=''){
+
+        if ($templateFileName==='')
+            $templateFileName = $this->settings['template'];
+        
+        if (file_exists($templateFileName)){
+
             $templateVarName = $this->settings['templateVarName'];
-            require_once $this->settings['template'];
+            require_once $templateFileName;
             $template = ${$templateVarName};
             //error_log(print_r($template,true));
             $keys = array_keys($template);
@@ -69,20 +73,15 @@ class ConfigCore{
             };
 
             if (count($errors)>0){
-                echo '<body style="background:white;color:black;font-family:Courier;font-size:12px">';
-                echo '<div style="background:gray;color:white;padding:2px">Config test stop webapp:</div>';
-                foreach($errors as $error)
-                    echo 'Error: '.$error."<br>";
-                foreach($warns as $warn)
-                    echo 'Warn  : '.$warn."<br>";
-                echo '</body>';
-                exit(0);
+                $this->stop(['errors'=>$errors,'warns'=>$warns]);
             };
-            
+
             if (count($warns)>0){
                 foreach($warns as $warn)
                 error_log('Warn: '.$warn);
             }
+        }else{
+            $this->stop(['msg'=>'not exists template file: '.$templateFileName]);
         }
     }
     
@@ -111,5 +110,23 @@ class ConfigCore{
 
         return $this->param[$name];
     }
+    private function stop($params=[]){
+        $params=array_merge([
+            'caption'=>'Config test stop webapp:',
+            'errors'=>[],
+            'warns'=>[],
+            'msg'=>'',
+        ],$params);
+        echo '<body style="background:white;color:black;font-family:Courier;font-size:12px">';
+        echo '<div style="background:gray;color:white;padding:2px">'.$params['caption'].'</div>';
+        if ($params['msg']!=='')
+            echo $params['msg']."<br>";
 
+        foreach($params['errors'] as $error)
+            echo 'Error: '.$error."<br>";
+        foreach($params['warns'] as $warn)
+            echo 'Warn  : '.$warn."<br>";
+        echo '</body>';
+        exit(0);
+    }
 }

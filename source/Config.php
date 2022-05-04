@@ -18,8 +18,11 @@ class Config{
         self::$config->define($name,$value);
     }
 
-    public static function loadFromFile(string $file,$testTemplate=false){
-        return self::$config->loadFromFile($file,$testTemplate);
+    public static function loadFromFile(string $file){
+        return self::$config->loadFromFile($file);
+    }
+    public static function test(string $templateFileName=''){
+        self::$config->test($templateFileName);
     }
 
 }
