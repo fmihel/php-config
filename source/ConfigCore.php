@@ -120,12 +120,12 @@ class ConfigCore{
         echo '<body style="background:white;color:black;font-family:Courier;font-size:12px">';
         echo '<div style="background:gray;color:white;padding:2px">'.$params['caption'].'</div>';
         if ($params['msg']!=='')
-            echo $params['msg']."<br>";
+            echo '<span style="color:red">'.$params['msg']."</span><br>";
 
         foreach($params['errors'] as $error)
-            echo 'Error: '.$error."<br>";
+            echo '<span style="color:red">Error: '.$error."</span><br>";
         foreach($params['warns'] as $warn)
-            echo 'Warn  : '.$warn."<br>";
+            echo '<span style="color:#F09A4D">Warn : '.$warn."</span><br>";
         echo '</body>';
         exit(0);
     }
