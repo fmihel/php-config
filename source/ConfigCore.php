@@ -37,13 +37,13 @@ class ConfigCore{
             $this->test();
     }
     /** 
-     * загрузка конфига из файла ( объединяется с текущей конфигурацией) 
+     * загрузка конфига из файла (добавит или перезапишет текущую конфигурацию) 
      * 
     */
     public function loadFromFile(string $file){
         $configVarName = $this->settings['configVarName'];
         require_once $file;
-        $this->param = array_merge_recursive($this->param,${$configVarName});
+        $this->param = array_merge($this->param,${$configVarName});
     }
     /** сравнение шаблона и загруженного конфига */
     public function test(string $templateFileName=''){
