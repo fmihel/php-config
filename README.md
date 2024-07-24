@@ -1,4 +1,5 @@
-# php-config
+# php-config 
+``v1.0.0``
 
 ## Загрузчик конфигурационного файла для приложений на php.
 
@@ -26,6 +27,9 @@ $config=[
     'base'=>'db',
     'pass'=>'xxxx',
     'user'=>'mike',
+    'emails'=>[
+        'admin'=>'xxx@xxx.xx',
+    ]
 ];
 ```
 ___index.php___
@@ -33,9 +37,11 @@ ___index.php___
 require_once __DIR__.'/vendor/autoload.php';
 use fmihel\config\Config;
 
-echo Config::get('pics');// out app/pics
-echo Config::get('no-def','default');// out default
+echo Config::get('pics');// app/pics
+echo Config::get('no-def','default');// default
 echo Config::get('no-def');  // raise Exception  
+echo Config::get('emails',['admin'=>'bbb@bbb.bb']);  // ['admin'=>'xxx@xxx.xx']
+echo Config::get('emails',['info'=>'aaa@aaa.aa']);  // ['admin'=>'xxx@xxx.xx','info'=>'aaa@aaa.aa']
 ```
 ---
 ## Использование шаблона конфигурации:

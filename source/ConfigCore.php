@@ -116,25 +116,25 @@ class ConfigCore
     /**
      * name || name ,default
      */
-    public function get(...$param)
+    public function get($name, ...$param)
     {
 
         $count = count($param);
-        if ($count === 0) {
-            throw new \Exception("need set one or two params", 0);
-        }
-
-        $name = $param[0];
 
         if (!isset($this->param[$name])) {
-            if ($count === 1) {
+            if ($count === 0) {
                 throw new \Exception("param [$name] is not exists", 0);
             }
-
-            return $param[1];
+            return $param[0];
         };
 
-        return $this->param[$name];
+        $out = $this->param[$name];
+        if ($count > 0) {
+            if (self::is_assoc($out) && self::is_assoc($param[0])) {
+                $out = array_merge($param[0], $out);
+            }
+        }
+        return $out;
     }
     private function stop($params = [])
     {
@@ -161,4 +161,22 @@ class ConfigCore
         echo '</body>';
         exit(0);
     }
+
+    private static function is_assoc($array)
+    {
+        if (gettype($array) !== 'array') {
+            return false;
+        }
+
+        $result = false;
+        try {
+
+            $result = empty($array) || (count(array_filter(array_keys($array), 'is_string')) > 0);
+
+        } catch (\Exception $e) {
+
+        }
+        return $result;
+    }
+
 }
